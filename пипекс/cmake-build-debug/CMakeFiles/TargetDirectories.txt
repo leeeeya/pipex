@@ -1,0 +1,3 @@
+/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/pipex.dir
