@@ -10,7 +10,7 @@
 void handlerError(int err) {
     if (err < 0) {
 //        write(2, msg, strlen(msg));
-        perror("Error");
+        perror(strerror(errno));
     }
 }
 

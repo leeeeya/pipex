@@ -14,8 +14,16 @@
 #include <string.h>
 #include "lib/libft.h"
 
-int check_arguments(int argc, char *argv[], char *envp[]);
+typedef struct some_struct
+{
+	char **cmd1;
+	char **cmd2;
+	char **envp;
+} list;
+list check_arguments(int argc, char *argv[], char *envp[]);
 int main(int argc, char *argv[], char *envp[]);
-int errors();
+void mem_error_handler(void *mem);
+void other_error_handler(int err);
+void error_handler(int value, const char *error);
 
 #endif //PIPEX_H

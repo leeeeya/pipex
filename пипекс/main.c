@@ -4,7 +4,8 @@
 #include "pipex.h"
 
 int main(int ac, char **av, char **envp) {
-    char *arg[] = {"/bin/ls", "-la", NULL};
+	printf("%s\n", av[0]);
+    char *arg[] = {"ls", "-la", NULL};
 	pid_t pid;
 
 	pid = fork();

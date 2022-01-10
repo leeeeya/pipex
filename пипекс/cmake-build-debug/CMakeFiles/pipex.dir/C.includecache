@@ -12,20 +12,6 @@ unistd.h
 stdlib.h
 -
 
-/Users/cstefany/Desktop/пипекс/perr.c
-stdio.h
--
-fcntl.h
--
-string.h
--
-errno.h
--
-unistd.h
--
-stdlib.h
--
-
 /Users/cstefany/Desktop/пипекс/pipex.c
 pipex.h
 /Users/cstefany/Desktop/пипекс/pipex.h

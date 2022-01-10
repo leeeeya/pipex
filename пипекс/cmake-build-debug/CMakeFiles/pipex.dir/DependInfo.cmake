@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/cstefany/Desktop/пипекс/check_arguments.c" "/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/pipex.dir/check_arguments.c.o"
+  "/Users/cstefany/Desktop/пипекс/errors.c" "/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/pipex.dir/errors.c.o"
   "/Users/cstefany/Desktop/пипекс/perr.c" "/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/pipex.dir/perr.c.o"
   "/Users/cstefany/Desktop/пипекс/pipex.c" "/Users/cstefany/Desktop/пипекс/cmake-build-debug/CMakeFiles/pipex.dir/pipex.c.o"
   )
