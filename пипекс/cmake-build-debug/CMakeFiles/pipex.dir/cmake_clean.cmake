@@ -1,7 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/pipex.dir/check_arguments.c.o"
   "CMakeFiles/pipex.dir/errors.c.o"
-  "CMakeFiles/pipex.dir/perr.c.o"
   "CMakeFiles/pipex.dir/pipex.c.o"
   "pipex"
   "pipex.pdb"

@@ -16,7 +16,7 @@
 # include <stdlib.h>
 typedef struct s_list
 {
-	void			*content;
+	char			**cmd;
 	struct s_list	*next;
 }	t_list;
 typedef unsigned char	t_byte;

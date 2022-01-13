@@ -89,9 +89,6 @@
 		<Unit filename="/Users/cstefany/Desktop/пипекс/lib/libft.h">
 			<Option target="pipex"/>
 		</Unit>
-		<Unit filename="/Users/cstefany/Desktop/пипекс/perr.c">
-			<Option target="pipex"/>
-		</Unit>
 		<Unit filename="/Users/cstefany/Desktop/пипекс/pipex.c">
 			<Option target="pipex"/>
 		</Unit>

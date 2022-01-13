@@ -1,50 +1,33 @@
-//
-// Created by Claribel Stefany on 12/17/21.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cstefany <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/10 18:08:25 by cstefany          #+#    #+#             */
+/*   Updated: 2022/01/10 18:08:29 by cstefany         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "pipex.h"
+#include "pipex.h"
 
-void dup_fd(int child, int pipe_fd[], int fd_io)
+void close_pfd(int *fd1, int *fd2, int **pipefd)
 {
-	int close_fd;
-	int first_dup;
-	int sec_dup;
-
-	if (child == 1)
+	int i = 0;
+	while(pipefd[i] != NULL)
 	{
-		close_fd = pipe_fd[0];
-		first_dup = fd_io;
-		sec_dup = pipe_fd[1];
+		if (&pipefd[i][0] != fd1 || &pipefd[i][0] != fd2 || &pipefd[i][1] != fd1 || &pipefd[i][1] != fd2)
+			close(pipefd[i][0]);
+		if (&pipefd[i][0] != fd1 || &pipefd[i][0] != fd2 || &pipefd[i][1] != fd1 || &pipefd[i][1] != fd2)
+			close(pipefd[i][1]);
+		i++;
 	}
-	else
-	{
-		close_fd = pipe_fd[1];
-		first_dup = pipe_fd[0];
-		sec_dup = fd_io;
-	}
-	close(close_fd);
-	error_handler(dup2(first_dup, STDIN_FILENO), "Dup");
-	error_handler(dup2(sec_dup, STDOUT_FILENO), "Dup");
 }
 
-//void child_exe(pid_t child, int *pipe_fd, int fd_io, list cmd_list)
-//{
-//	error_handler(child, "Fork");
-//	if (child == 0)
-//	{
-//		dup_fd(chld_no, pipe_fd, fd_io);
-//		if (chld_no == 1)
-//			execve(cmd_list.cmd1[0], cmd_list.cmd1++, cmd_list.envp);
-//		else
-//			execve(cmd_list.cmd2[0], cmd_list.cmd2++, cmd_list.envp);
-//	}
-//}
-
-
-
-int open_output(char *argv)
+int	open_output(char *argv)
 {
-	int fd_output;
+	int	fd_output;
 
 	if (access(argv, F_OK) != 0)
 	{
@@ -56,47 +39,99 @@ int open_output(char *argv)
 		fd_output = open(argv, O_RDWR);
 		error_handler(fd_output, "Open");
 	}
-	return(fd_output);
+	return (fd_output);
 }
 
-
-int main(int argc, char *argv[], char *envp[])
+int	main(int argc, char *argv[], char *envp[])
 {
-	int pipe_fd[2];
-	pid_t child1;
-	pid_t child2;
-	list cmd_list;
-	int fd_input;
-	int fd_output;
-	int status;
+	pid_t	*child;
+	t_list	*cmd_list;
+	int		io_fd[2];
+	int		**pipe_fd;
+	int		*status;
+	int		i;
+	int		cmd_no;
 
-	fd_input = open(argv[1], O_RDONLY, 0777);
-	error_handler(fd_input,"Open");
-	fd_output = open_output(argv[4]);
+	cmd_no = argc -3;
+	i = 0;
+
+	child = (pid_t *)malloc(sizeof(pid_t) * cmd_no);
+	status = (int *)malloc(sizeof(int) * cmd_no);
+	pipe_fd = (int **)malloc(sizeof(int *) * (cmd_no - 1));
+	while(i != cmd_no - 1)
+	{
+
+		pipe_fd[i] = (int *)malloc(sizeof (int));
+		i++;
+	}
+
+	i = 0;
+	io_fd[0] = open(argv[1], O_RDONLY, 0777);
+	error_handler(io_fd[0], "Open");
+	io_fd[1] = open_output(argv[argc - 1]);
 	cmd_list = check_arguments(argc, argv, envp);
-	cmd_list.envp = envp;
-	error_handler(pipe(pipe_fd), "Pipe");
-	child1 = fork();
-	error_handler(child1, "Fork");
-//	child_exe(1, pipe_fd, fd_input, cmd_list);
-	if (child1 == 0)
+
+	while(i != cmd_no)
 	{
-		dup_fd(1, pipe_fd, fd_input);
-		execve(cmd_list.cmd1[0], cmd_list.cmd1++, cmd_list.envp);
+		if (i == 0)
+		{
+			error_handler(pipe(pipe_fd[i]), "Pipe");
+			child[i] = fork();
+			error_handler(child[i], "Fork");
+			if (child[i] == 0)
+			{
+				close_pfd(&io_fd[0], &pipe_fd[i][1], (int **)pipe_fd);
+				error_handler(dup2(io_fd[0], STDIN_FILENO), "Dup 86");
+				error_handler(dup2(pipe_fd[i][1], STDOUT_FILENO), "Dup 87");
+				execve(cmd_list->cmd[0], cmd_list->cmd, envp);
+			}
+		}
+		cmd_list = cmd_list->next;
+		i++;
+		if (i == cmd_no - 1)
+		{
+			child[i] = fork();
+			error_handler(child[i], "Fork");
+			if (child[i] == 0)
+			{
+				close_pfd(&pipe_fd[i - 1][0], &io_fd[1], (int**)pipe_fd);
+				error_handler(dup2(pipe_fd[i - 1][0], STDIN_FILENO), "Dup 100");
+				error_handler(dup2(io_fd[1], STDOUT_FILENO), "Dup 101");
+				execve(cmd_list->cmd[0], cmd_list->cmd, envp);
+			}
+		}
+		else if (i < cmd_no - 1)
+		{
+			error_handler(pipe(pipe_fd[i]), "Pipe");
+			child[i] = fork();
+			error_handler(child[i], "Fork");
+			if (child[i] == 0) {
+				close_pfd(&pipe_fd[i][1], &pipe_fd[i - 1][0], (int **) pipe_fd);
+				error_handler(dup2(pipe_fd[i - 1][0], STDIN_FILENO), "Dup 111");
+				error_handler(dup2(pipe_fd[i][1], STDOUT_FILENO), "Dup 112");
+				execve(cmd_list->cmd[0], cmd_list->cmd, envp);
+			}
+		}
 	}
-	child2 = fork();
-//	child_exe(2, pipe_fd, fd_output, cmd_list);
-	error_handler(child2, "Fork");
-	if (child2 == 0)
+	i = 0;
+	while(i != cmd_no - 1)
 	{
-		dup_fd(2, pipe_fd, fd_output);
-		execve(cmd_list.cmd2[0], cmd_list.cmd2++, cmd_list.envp);
+		close(pipe_fd[i][0]);
+		close(pipe_fd[i][1]);
+		i++;
 	}
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
-	waitpid(child1, &status, 0);
-	waitpid(child2, &status, 0);
-	close(fd_input);
-	close(fd_output);
-	return 0;
+	i = 0;
+	while(i != cmd_no)
+	{
+		printf("%d\n", child[i]);
+		i++;
+	}
+	i = 0;
+	while(i != cmd_no)
+	{
+		error_handler(waitpid(child[i], &status[i], 0), "waitpid");
+		i++;
+	}
+	close_fd(io_fd[0], io_fd[1]);
+	return (0);
 }

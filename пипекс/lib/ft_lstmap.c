@@ -21,13 +21,13 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	if (lst == NULL)
 		return (NULL);
 	tmp_lst = lst;
-	lst_res = ft_lstnew(f(tmp_lst->content));
+	lst_res = ft_lstnew(f(tmp_lst->cmd));
 	if (lst_res == NULL)
 		return (NULL);
 	while (tmp_lst->next != NULL)
 	{
 		tmp_lst = tmp_lst->next;
-		ft_lstadd_back(&lst_res, ft_lstnew(f(tmp_lst->content)));
+		ft_lstadd_back(&lst_res, ft_lstnew(f(tmp_lst->cmd)));
 	}
 	if (ft_lstsize(lst) > ft_lstsize(lst_res))
 	{

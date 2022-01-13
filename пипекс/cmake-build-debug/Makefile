@@ -177,30 +177,6 @@ errors.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pipex.dir/build.make CMakeFiles/pipex.dir/errors.c.s
 .PHONY : errors.c.s
 
-perr.o: perr.c.o
-.PHONY : perr.o
-
-# target to build an object file
-perr.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pipex.dir/build.make CMakeFiles/pipex.dir/perr.c.o
-.PHONY : perr.c.o
-
-perr.i: perr.c.i
-.PHONY : perr.i
-
-# target to preprocess a source file
-perr.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pipex.dir/build.make CMakeFiles/pipex.dir/perr.c.i
-.PHONY : perr.c.i
-
-perr.s: perr.c.s
-.PHONY : perr.s
-
-# target to generate assembly for a file
-perr.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pipex.dir/build.make CMakeFiles/pipex.dir/perr.c.s
-.PHONY : perr.c.s
-
 pipex.o: pipex.c.o
 .PHONY : pipex.o
 
@@ -240,9 +216,6 @@ help:
 	@echo "... errors.o"
 	@echo "... errors.i"
 	@echo "... errors.s"
-	@echo "... perr.o"
-	@echo "... perr.i"
-	@echo "... perr.s"
 	@echo "... pipex.o"
 	@echo "... pipex.i"
 	@echo "... pipex.s"

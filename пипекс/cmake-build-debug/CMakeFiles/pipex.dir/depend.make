@@ -9,8 +9,6 @@ CMakeFiles/pipex.dir/errors.c.o: \
  ../errors.c \
  ../lib/libft.h \
  ../pipex.h
-CMakeFiles/pipex.dir/perr.c.o: \
- ../perr.c
 CMakeFiles/pipex.dir/pipex.c.o: \
  ../lib/libft.h \
  ../pipex.c \

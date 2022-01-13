@@ -12,11 +12,12 @@
 
 #include "pipex.h"
 
-void	mem_error_handler(void *mem)
+void	mem_error_handler(void *mem, int str)
 {
 	if (!mem)
 	{
-		write(2, "ERROR: Memory allocation error", 30);
+		write(2, "ERROR: Memory allocation error ", 30);
+		printf("(%d)\n", str);
 		exit(12);
 	}
 }
@@ -40,11 +41,17 @@ void	other_error_handler(int err)
 	}
 }
 
-void error_handler(int value, const char *error)
+void	error_handler(int value, const char *error)
 {
 	if (value < 0)
 	{
 		perror(error);
 		exit(errno);
 	}
+}
+
+void	close_fd(int fd1, int fd2)
+{
+	close(fd1);
+	close(fd2);
 }

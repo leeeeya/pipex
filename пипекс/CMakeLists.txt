@@ -10,7 +10,6 @@ add_executable(pipex
         pipex.c
         check_arguments.c
         errors.c
-        perr.c
         lib/libft.h
         )
 target_link_libraries(pipex /Users/cstefany/Desktop/пипекс/lib/libft.a)

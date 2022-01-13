@@ -21,12 +21,12 @@ char	**join_slash(char **path)
 	while (path[i] != NULL)
 		i++;
 	res_paths = (char **)ft_calloc(i + 1, sizeof(char *));
-	mem_error_handler(res_paths);
+	mem_error_handler(res_paths, 24);
 	i = 0;
 	while (path[i] != NULL)
 	{
 		res_paths[i] = ft_strjoin(path[i], "/");
-		mem_error_handler(res_paths[i]);
+		mem_error_handler(res_paths[i], 29);
 		i++;
 	}
 	i = 0;
@@ -48,11 +48,11 @@ const char	**search_path(char *envp[])
 	while (!ft_strnstr(envp[i], "PATH=", ft_strlen("PATH=")))
 		i++;
 	envp[i] = ft_strtrim(envp[i], "PATH=");
-	mem_error_handler(envp[i]);
+	mem_error_handler(envp[i], 51);
 	path = (const char **)ft_split(envp[i], ':');
-	mem_error_handler(path);
+	mem_error_handler(path, 53);
 	path = (const char **) join_slash((char **)path);
-	mem_error_handler(path);
+	mem_error_handler(path, 55);
 	return (path);
 }
 
@@ -67,12 +67,12 @@ char	*validation_check(char *arg, const char **path)
 	else
 	{
 		tmp_arg = ft_strdup(arg);
-		mem_error_handler(tmp_arg);
+		mem_error_handler(tmp_arg, 70);
 		free(arg);
 		while (path[++i])
 		{
 			arg = ft_strjoin(path[i], tmp_arg);
-			mem_error_handler(arg);
+			mem_error_handler(arg, 75);
 			if (access(arg, F_OK) == 0)
 			{
 				free(tmp_arg);
@@ -91,7 +91,7 @@ char	**check_command(const char *argv, const char **path)
 
 	true_path = NULL;
 	true_path = ft_split(argv, ' ');
-	mem_error_handler(true_path);
+	mem_error_handler(true_path, 94);
 	true_path[0] = validation_check(true_path[0], path);
 	if (!true_path[0])
 	{
@@ -102,24 +102,30 @@ char	**check_command(const char *argv, const char **path)
 		return (true_path);
 }
 
-list	check_arguments(int argc, char *argv[], char *envp[])
+t_list	*check_arguments(int argc, char *argv[], char *envp[])
 {
 	const char	**paths_list;
-	list		cmd_list;
+	t_list		*cmd_list;
 	int			i;
+	t_list 		*tmp_list;
 
-	i = 0;
-	cmd_list.cmd1 = NULL;
-	cmd_list.cmd2 = NULL;
-	if (argc != 5)
+	i = 1;
+	cmd_list = NULL;
+	if (argc < 5)
 		other_error_handler(1);
 	if (access(argv[1], R_OK) != 0)
 		other_error_handler(2);
-	if (access(argv[4], W_OK) != 0 && !access(argv[4], F_OK))
+	if (access(argv[argc], W_OK) != 0 && !access(argv[argc], F_OK))
 		other_error_handler(2);
 	paths_list = search_path(envp);
-	cmd_list.cmd1 = check_command(argv[2], paths_list);
-	cmd_list.cmd2 = check_command(argv[3], paths_list);
+	while(++i != argc - 1)
+	{
+		tmp_list = ft_lstnew(check_command(argv[i], paths_list));
+		mem_error_handler(tmp_list, 124);
+		ft_lstadd_back(&cmd_list, tmp_list);
+		tmp_list = tmp_list->next;
+	}
+	i = 0;
 	while (paths_list[i] != NULL)
 	{
 		free((void *)paths_list[i]);
